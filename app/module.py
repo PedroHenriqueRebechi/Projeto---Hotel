@@ -1,12 +1,12 @@
-def cadastrar_cliente(clientes):
-    cpf = input("Digite seu CPF apenas numeros: ")
+def cadastrar_cliente(lista_clientes):
+    cpf = int(input("Digite seu CPF apenas numeros: "))
 
-    for cliente in clientes:
+    for cliente in lista_clientes:
         if cliente['cpf'] == cpf:
             return print("Erro! Esse CPF já está cadastrado")
     
-    nome = input("Nome: ")
-    data_nascimento = input("Data de nascimento: ")
+    nome = str(input("Nome: "))
+    data_nascimento = input("Data de nascimento (dd/mm/aaaa): ")
 
     cliente = {
         'nome': nome,
@@ -14,8 +14,13 @@ def cadastrar_cliente(clientes):
         'data_nascimento': data_nascimento
     }
     
-    clientes.append(cliente)
+    lista_clientes.append(cliente)
     return
+
+def listar_clientes(lista_clientes):
+    for cliente in lista_clientes:
+        #print(cliente)
+        print(f"Nome do cliente: {cliente['nome']} | CPF: {cliente['cpf']} | Data de nascimento: {cliente['data_nascimento']}")
 
 class Cliente():
     def __init__(self, nome, cpf, data_nascimento):
@@ -29,11 +34,13 @@ def main():
     while True:
         opcao = input("Digite opcão: ")
 
-        if opcao == 'A':
+        if opcao == '1':
             cadastrar_cliente(clientes)
-            #print(clientes)
 
-        elif opcao == 'S': 
+        if opcao == '2':
+            listar_clientes(clientes)
+
+        elif opcao == '9': 
             break
 
     
