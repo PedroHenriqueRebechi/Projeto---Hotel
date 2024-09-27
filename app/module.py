@@ -48,11 +48,42 @@ class Cliente():
         return """
     
 class Verifica(Cliente):
-    pass
+    def __init__(self, nome, cpf, data_nascimento):
+        super().__init__(nome, cpf, data_nascimento)
 
+    def checar_disponiveis(self):
+        pass
+
+class Quarto():
+    def __init__(self, numero,disponibilidade):
+        self.__disponibilidade = disponibilidade
+        self.__numero = numero
+    
+    @property
+    def disponibilidade(self):
+        return self.__disponibilidade
+
+    @property
+    def numero(self):
+        return self.__numero
+
+    def mostrar_disponibilidade(self):
+        if self.disponibilidade == True:
+            return f"Quarto {self.numero}: Disponível"
+        else:
+            return f"Quarto {self.numero}: Indisponível"
+
+class Reserva(Quarto):
+    def __init__(self, numero, disponibilidade):
+        super().__init__(numero, disponibilidade)
+
+    def fazer_reserva(self):
+        pass
 
 def main(): 
     clientes = [] # Alterar para banco de dados
+    quartos = [Quarto("001", True), Quarto("002", False), Quarto("003", True)]
+
     while True:
         opcao = input("Digite opcão: ")
 
@@ -61,6 +92,21 @@ def main():
 
         if opcao == '2':
             listar_clientes(clientes)
+
+        if opcao == '3':
+            print("-----QUARTOS------")
+            i = 0
+            for quarto in quartos:
+                print(quartos[i].mostrar_disponibilidade())
+                i+=1
+            print('------------------')
+
+            quarto_escolhido = str((input("Digite o número do quarto que deseja se hospedar: ")))
+
+            for quarto in quartos:
+                if quarto_escolhido == quarto.numero and quarto.disponibilidade == True:
+                    print("Reserva completada!")
+
 
         elif opcao == '9': 
             break
