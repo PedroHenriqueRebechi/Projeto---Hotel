@@ -66,6 +66,10 @@ class Quarto():
     @property
     def numero(self):
         return self.__numero
+    
+    @disponibilidade.setter
+    def alterar_disponibilidade(self, nova_disponibilidade):
+        self.__disponibilidade = nova_disponibilidade
 
     def mostrar_disponibilidade(self):
         if self.disponibilidade == True:
@@ -82,7 +86,7 @@ class Reserva(Quarto):
 
 def main(): 
     clientes = [] # Alterar para banco de dados
-    quartos = [Quarto("001", True), Quarto("002", False), Quarto("003", True)]
+    quartos = [Quarto("1", True), Quarto("2", False), Quarto("3", False)] # Disponível?
 
     while True:
         opcao = input("Digite opcão: ")
@@ -94,10 +98,11 @@ def main():
             listar_clientes(clientes)
 
         if opcao == '3':
+
             print("-----QUARTOS------")
             i = 0
             for quarto in quartos:
-                print(quartos[i].mostrar_disponibilidade())
+                print(quartos[i].mostrar_disponibilidade())            
                 i+=1
             print('------------------')
 
@@ -105,9 +110,13 @@ def main():
 
             for quarto in quartos:
                 if quarto_escolhido == quarto.numero and quarto.disponibilidade == True:
-                    print("Reserva completada!")
-
-
+                    cpf = int(input("Informe seu CPF para completar a reserva: "))
+                    for cliente in clientes:
+                        if cliente.cpf == cpf:
+                            quarto.alterar_disponibilidade = False
+                            print(f"{cliente.nome}, obrigado por contar conosco!\n--Reserva completada!--\n{quarto.disponibilidade} ")
+                    
+            
         elif opcao == '9': 
             break
 
