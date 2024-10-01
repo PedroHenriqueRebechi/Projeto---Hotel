@@ -1,22 +1,3 @@
-def cadastrar_cliente(lista_clientes):
-    cpf = int(input("Digite seu CPF apenas numeros: "))
-
-    for cliente in lista_clientes:
-        if cliente.cpf == cpf:
-            return print("Erro! Esse CPF já está cadastrado")
-        
-    nome = str(input("Nome: "))
-    data_nascimento = input("Data de nascimento (dd/mm/aaaa): ")
-    
-    cliente = Cliente(nome=nome, data_nascimento=data_nascimento, cpf=cpf)
-    
-    lista_clientes.append(cliente)
-    return
-
-def listar_clientes(lista_clientes):
-    for cliente in lista_clientes:
-        print(cliente.__repr__())
-
 class Cliente():
     def __init__(self, nome, cpf, data_nascimento):
         self.__nome = nome
@@ -36,16 +17,7 @@ class Cliente():
         return self.__data_nascimento
     
     def __repr__(self):
-        return f"Cliente: {self.nome} | CPF: {self.cpf} | Data de Nascimento: {self.data_nascimento}"
-    
-    """def entrar_conta(self, lista_clientes):
-        login = int(input("Digite seu CPF: "))
-
-        for cliente in lista_clientes:
-            if cliente.cpf != login:
-                return print("Erro! Esse CPF não está cadastrado")
-        
-        return """
+        return f"Cliente: {self.nome} | CPF: ***.{self.cpf[4:11]}-** | Data de Nascimento: {self.data_nascimento}"
     
 class Verifica(Cliente):
     def __init__(self, nome, cpf, data_nascimento):
@@ -76,38 +48,94 @@ class Quarto():
             return f"Quarto {self.numero}: Disponível"
         else:
             return f"Quarto {self.numero}: Indisponível"
+        
+    def fazer_reserva(self, quarto, clientes):
+        #quarto_escolhido = str((input("Digite o número do quarto que deseja se hospedar: ")))
 
-class Reserva(Quarto):
-    def __init__(self, numero, disponibilidade):
-        super().__init__(numero, disponibilidade)
+        cpf = str(input("Informe seu CPF para completar a reserva: "))
 
-    def fazer_reserva(self):
-        pass
+        if len(clientes) == 0:
+            return print(f"\nO seu CPF não está cadastrado no nosso sistema")
+        
+        for cliente in clientes:
+            if cliente.cpf == cpf:
+                quarto.alterar_disponibilidade = False
+                print(f"{cliente.nome}, obrigado por contar conosco!\n--Reserva completada!--\n{quarto.disponibilidade} ")
+            else:
+                print(f'O seu CPF não está cadastrado no nosso sistema')
+        return
+
+def cadastrar_cliente(lista_clientes):
+    cpf = str(input("Digite seu CPF: "))
+
+    for cliente in lista_clientes:
+        if cliente.cpf == cpf:
+            return print("\nErro! Esse CPF já está cadastrado")
+        
+    nome = str(input("Nome: "))
+    data_nascimento = input("Data de nascimento (dd/mm/aaaa): ")
+    
+    cliente = Cliente(nome=nome, data_nascimento=data_nascimento, cpf=cpf)
+    
+    lista_clientes.append(cliente)
+    return
+
+def listar_clientes(lista_clientes):
+    for cliente in lista_clientes:
+        print(cliente.__repr__())
+
+def menu():
+    opcoes = """
+----MENU----
+[1] Fazer cadastro
+[2] Listar clientes
+[3] Fazer reserva
+
+[9] Sair
+
+Digite sua opção: """
+    return int(input(opcoes))
+
+def escolher_quarto(lista_quartos, lista_clientes):
+    print("-----QUARTOS------")
+    i = 0
+    for quarto in lista_quartos:
+        print(lista_quartos[i].mostrar_disponibilidade())            
+        i+=1
+    print('------------------')
+    quarto_escolhido = str((input("Digite o número do quarto que deseja se hospedar: ")))
+
+    for quarto in lista_quartos:
+        if quarto_escolhido == quarto.numero and quarto.disponibilidade == True:
+            return quarto.fazer_reserva(quarto, lista_clientes)
+    
+    return print("\nQuarto indisponível!")
 
 def main(): 
     clientes = [] # Alterar para banco de dados
     quartos = [Quarto("1", True), Quarto("2", False), Quarto("3", False)] # Disponível?
 
     while True:
-        opcao = input("Digite opcão: ")
+        opcao = menu()
 
-        if opcao == '1':
+        if opcao == 1:
             cadastrar_cliente(clientes)
 
-        if opcao == '2':
+        if opcao == 2:
             listar_clientes(clientes)
 
-        if opcao == '3':
+        if opcao == 3:
+            escolher_quarto(quartos, clientes)
 
-            print("-----QUARTOS------")
-            i = 0
-            for quarto in quartos:
-                print(quartos[i].mostrar_disponibilidade())            
-                i+=1
-            print('------------------')
-
+            """
             quarto_escolhido = str((input("Digite o número do quarto que deseja se hospedar: ")))
 
+            for quarto in quartos:
+                if quarto_escolhido == quarto.numero and quarto.disponibilidade == True:
+                    return quarto.fazer_reserva(quarto, clientes)
+
+            
+            
             for quarto in quartos:
                 if quarto_escolhido == quarto.numero and quarto.disponibilidade == True:
                     cpf = int(input("Informe seu CPF para completar a reserva: "))
@@ -115,9 +143,12 @@ def main():
                         if cliente.cpf == cpf:
                             quarto.alterar_disponibilidade = False
                             print(f"{cliente.nome}, obrigado por contar conosco!\n--Reserva completada!--\n{quarto.disponibilidade} ")
+                        else:
+                            print(f'O seu CPF não está cadastrado no nosso sistema')
+            return"""
                     
             
-        elif opcao == '9': 
+        elif opcao == 9: 
             break
 
 main()
