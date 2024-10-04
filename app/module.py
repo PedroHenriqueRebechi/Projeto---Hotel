@@ -35,11 +35,11 @@ class Quarto():
     def alterar_disponibilidade(self, nova_disponibilidade):
         self.__disponibilidade = nova_disponibilidade
 
-    def mostrar_disponibilidade(self, data_saida):
+    def mostrar_disponibilidade(self):
         if self.disponibilidade == True:
             return f"Quarto {self.numero}: Disponível"
         else:
-            return f"Quarto {self.numero}: Indisponível até {data_saida}"
+            return f"Quarto {self.numero}: Indisponível" # até {data_saida}"
 
 class Reserva(Quarto):
     def __init__(self, quarto, data_entrada, data_saida):
@@ -93,11 +93,15 @@ Digite sua opção: """
     return int(input(opcoes))
 
 def escolher_quarto(lista_quartos, lista_clientes, lista_reservas):
-    print("-----QUARTOS------")
+    print("-----QUARTOS------\n")
     i = 0
     for quarto in lista_quartos:
-        print(lista_quartos[i].mostrar_disponibilidade())
+        print(f"{lista_quartos[i].mostrar_disponibilidade()}", end=" ")
+        for reserva in lista_reservas:
+            if reserva.quarto == quarto:
+                print(f"até {reserva.data_saida}")
         i+=1
+        print('\n')
     print('------------------')
 
     quarto_escolhido = str(input("Digite o número do quarto que deseja se hospedar: "))
