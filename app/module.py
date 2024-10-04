@@ -1,4 +1,5 @@
 from datetime import datetime
+from re import sub
 
 class Cliente():
     def __init__(self, nome, cpf, data_nascimento):
@@ -19,7 +20,7 @@ class Cliente():
         return self.__data_nascimento
     
     def __repr__(self):
-        return f"Cliente: {self.nome} | CPF: ***.{self.cpf[4:11]}-** | Data de Nascimento: {self.data_nascimento}"
+        return f"Cliente: {self.nome} | CPF: ***{self.cpf[4:11]}** | Data de Nascimento: {self.data_nascimento}" # ***.{str(self.cpf)[4:11]}-**
 
 class Quarto():
     def __init__(self, numero,disponibilidade, preco=100):
@@ -62,23 +63,36 @@ class Reserva(Quarto):
         return
 
 def cadastrar_cliente(lista_clientes):
-    cpf = str(input("Digite seu CPF: "))
+    try:    
+        cpf = sub(r'\D', '', input("Digite seu CPF (apenas numeros): "))
 
-    for cliente in lista_clientes:
-        if cliente.cpf == cpf:
-            return print("\nErro! Esse CPF já está cadastrado")
+        if len(cpf) != 11:
+            return print("Digite um CPF válido!")
         
-    nome = str(input("Nome: "))
-    data_nascimento = input("Data de nascimento (dd/mm/aaaa): ")
-    
-    cliente = Cliente(nome=nome, data_nascimento=data_nascimento, cpf=cpf)
+        cpf = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
+
+        for cliente in lista_clientes:
+            if cliente.cpf == cpf:
+                return print("\nErro! Esse CPF já está cadastrado")
+            
+        nome = str(input("Nome: "))
+        data_nascimento = datetime.strptime(str(input("Data de nascimento (dd/mm/aaaa): ")), '%d/%m/%Y').date()
+        data_nascimento = data_nascimento.strftime('%d/%m/%Y')
+        cliente = Cliente(nome=nome, data_nascimento=data_nascimento, cpf=cpf)
+
+    except ValueError:
+        print("Por favor, insira valores válidos!")
+        return
     
     lista_clientes.append(cliente)
     return
 
 def listar_clientes(lista_clientes):
+    if len(lista_clientes) == 0:
+            return print("--Nenhum cliente cadastrado--")
+    
     for cliente in lista_clientes:
-        print(cliente.__repr__())
+        return print(cliente.__repr__())
 
 def menu():
     opcoes = """
@@ -105,12 +119,10 @@ def escolher_quarto(lista_quartos, lista_clientes, lista_reservas):
     print('------------------')
 
     quarto_escolhido = str(input("Digite o número do quarto que deseja se hospedar: "))
-    data_entrada_str = datetime.strptime(str(input("Digite a data do check-in (DD/MM/AAAA): ")), '%d/%m/%Y').date()
-    data_saida_str = datetime.strptime(str(input("Digite a data do check-out (DD/MM/AAAA): ")), '%d/%m/%Y').date()
-    data_entrada = data_entrada_str.strftime('%d/%m/%Y')
-    data_saida = data_saida_str.strftime('%d/%m/%Y')
-    print(data_entrada)
-    print(data_saida)
+    data_entrada = datetime.strptime(str(input("Digite a data do check-in (DD/MM/AAAA): ")), '%d/%m/%Y').date()
+    data_saida = datetime.strptime(str(input("Digite a data do check-out (DD/MM/AAAA): ")), '%d/%m/%Y').date()
+    data_entrada = data_entrada.strftime('%d/%m/%Y')
+    data_saida = data_saida.strftime('%d/%m/%Y')
 
     for quarto in lista_quartos:
         if quarto_escolhido == quarto.numero and quarto.disponibilidade == True:
@@ -130,7 +142,7 @@ def main():
         opcao = menu()
 
         if opcao == 1:
-            cadastrar_cliente(clientes)
+                cadastrar_cliente(clientes)
 
         if opcao == 2:
             listar_clientes(clientes)
