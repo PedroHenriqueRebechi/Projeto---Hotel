@@ -51,6 +51,8 @@ class Reserva(Quarto):
     def reservar(self, quarto, clientes):
         cpf = str(input("Informe seu CPF para completar a reserva: "))
 
+        cpf = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
+
         if len(clientes) == 0:
             return print(f"\nO seu CPF não está cadastrado no nosso sistema")
         
@@ -92,7 +94,8 @@ def listar_clientes(lista_clientes):
             return print("--Nenhum cliente cadastrado--")
     
     for cliente in lista_clientes:
-        return print(cliente.__repr__())
+        print(cliente.__repr__())
+        
 
 def menu():
     opcoes = """
@@ -121,6 +124,8 @@ def escolher_quarto(lista_quartos, lista_clientes, lista_reservas):
     quarto_escolhido = str(input("Digite o número do quarto que deseja se hospedar: "))
     data_entrada = datetime.strptime(str(input("Digite a data do check-in (DD/MM/AAAA): ")), '%d/%m/%Y').date()
     data_saida = datetime.strptime(str(input("Digite a data do check-out (DD/MM/AAAA): ")), '%d/%m/%Y').date()
+    if data_entrada > data_saida:
+        return print(f"\nErro! Coloque datas válidas")
     data_entrada = data_entrada.strftime('%d/%m/%Y')
     data_saida = data_saida.strftime('%d/%m/%Y')
 
@@ -142,7 +147,7 @@ def main():
         opcao = menu()
 
         if opcao == 1:
-                cadastrar_cliente(clientes)
+            cadastrar_cliente(clientes)
 
         if opcao == 2:
             listar_clientes(clientes)
