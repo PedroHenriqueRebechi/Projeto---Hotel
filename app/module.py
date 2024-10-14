@@ -97,7 +97,7 @@ def listar_clientes(lista_clientes):
     
     for cliente in lista_clientes:
         print(cliente.__repr__())
-        
+
 def menu():
     opcoes = """
 ----MENU----
@@ -166,7 +166,6 @@ def soma_diaria(lista_clientes, lista_reservas):
         elif reserva.cpf != cpf:
             return print(f'Você não tem nenhuma reserva')
 
-
 def main(): 
     clientes = [] # Alterar para banco de dados
     reservas = []
@@ -186,6 +185,9 @@ def main():
 
         if opcao == 4:
             soma_diaria(clientes, reservas)
+
+        if opcao == 5:
+            print(reservas[0])
                     
         
         elif opcao == 9: 
